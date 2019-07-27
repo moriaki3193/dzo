@@ -2,6 +2,7 @@
 """Base classes
 """
 from abc import ABCMeta, abstractmethod
+from typing import List
 
 
 class TokenBase:
@@ -19,7 +20,7 @@ class TokenizerBase(metaclass=ABCMeta):
     """
 
     @abstractmethod
-    def tokenize(self, sentence: str) -> TokenBase:
+    def tokenize(self, sentence: str) -> List[TokenBase]:
         """Tokenize a given sentence.
         """
         raise NotImplementedError

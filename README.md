@@ -20,10 +20,29 @@ $ pip install -e .[dev]  # installs extra dependencies for development.
 ```
 
 ## Usage
+### Command line tool
+#### Make inverted indices
+```shell
+# Local directory
+$ dzo preprocess <target_dir> <result_path>
+
+# e.g.
+$ dzo preprocess ./data/products ./data/inverted-index.pkl
+```
+
+#### Search
+```shell
+$ dzo search <query> --index-path <index_path>
+
+# e.g.
+$ dzo search おにぎり --index-path ./data/inverted-index.pkl
+```
+
+### Python package
 **WIP**
 
-### Development
-#### Commands
+## Development
+### Commands
 ```shell
 # Building cython extensions.
 $ make build/ext

@@ -2,10 +2,11 @@
 """Preprocess module
 """
 import glob
+import pickle
 from os import path
 from typing import List, Optional, Set
 
-from .indexer import Indexer, NamedIndex
+from .indexer import Indexer, NamedIndex, InvIndex
 from .tokenizer.base import TokenizerBase
 
 
@@ -47,7 +48,7 @@ class Preprocessor:
     def preprocess(
             self,
             tokenizer: TokenizerBase,
-            ignored_exts: Optional[Set[str]] = None) -> None:
+            ignored_exts: Optional[Set[str]] = None) -> InvIndex:
         """A preprocessing pipeline.
         """
         # Load files
@@ -65,9 +66,13 @@ class Preprocessor:
             named_indices.append(NamedIndex(file_path, index))
         full_index = Indexer.merge(named_indices)
         inv_index = Indexer.make_inv_index(full_index)
-        print(inv_index)
+        return inv_index
 
-
-    def save(self) -> None:
+    @staticmethod
+    def save(inv_index: InvIndex, result_path: str) -> None:
         """save the results of preprocess pipeline.
         """
+        if path.exists(result_path):
+            raise FileExistsError
+        with open(result_path, mode='wb') as fp:
+            pickle.dump(inv_index, fp)

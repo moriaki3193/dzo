@@ -19,14 +19,21 @@ parser_preprocess = subparsers.add_parser(
     'preprocess',
     help='preprocess <dir> [--output /path/to/output]')
 parser_preprocess.add_argument('target_dir', type=str, help='search target directory')
-parser_preprocess.add_argument('result_dir', type=str, help='a path to preprocess result')
+parser_preprocess.add_argument('result_path', type=str, help='a path to preprocess result')
 parser_preprocess.add_argument('--ignore', nargs='+', help='file extensions to be ignored')
 parser_preprocess.set_defaults(handler=preprocess)
 
 # Create the parser for the "search" command
-parser_search = subparsers.add_parser('search', help='search <query> [--dir /path/to/resource]')
+parser_search = subparsers.add_parser(
+    'search',
+    help='search <query> [--index-path /path/to/resource]')
 parser_search.add_argument('query', type=str, help='search query')
-parser_search.add_argument('--dir', '-d', help='search target directory', required=False)
+parser_search.add_argument(
+    '--index-path',
+    '-i',
+    type=str,
+    help='a path to inverted index',
+    required=True)
 parser_search.set_defaults(handler=search)
 
 
