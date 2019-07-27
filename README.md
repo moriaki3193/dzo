@@ -59,3 +59,9 @@ $ make test
 # Other utility commands are available.
 # See Makefile for more details.
 ```
+
+## Sponsors
+<div style='max-width: 100px;'>
+
+[![Recipio Inc.](./.images/recipio-logo.png)](http://about.recipio.jp/)
+</div>
