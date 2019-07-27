@@ -1,0 +1,10 @@
+[MASTER]
+max-line-length=100
+max-locals=20
+
+[MESSAGE CONTROL]
+disable = invalid-name,
+          too-many-arguments,
+          too-few-public-methods,
+          too-many-instance-attributes,
+          arguments-differ
