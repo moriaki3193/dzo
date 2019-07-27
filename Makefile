@@ -16,6 +16,28 @@ check/type:
 build/ext:
 	@python3 $(CURDIR)/setup.py build_ext --inplace
 
+# Build distribution source.
+.PHONY: build/dist
+build/dist:
+	@python3 setup.py sdist
+
+# Build package of this library.
+.PHONY: build/wheel
+build/wheel:
+	@python3 setup.py bdist_wheel
+
+# Build this package.
+.PHONY: build/pkg
+build/pkg: build/dist build/wheel
+
+.PHONY: upload/pkg/test
+upload/pkg/test:
+	twine upload --repository testpypi dist/*
+
+.PHONY: upload/pkg
+upload/pkg:
+	twine upload --repository pypi dist/*
+
 .PHONY: clean/ext
 clean/ext:
 	rm $(CURDIR)/$(PACKAGE_NAME)/ext/*.so
@@ -27,6 +49,10 @@ clean/pyc:
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
 	find . -name '__pycache__' -exec rm -fr {} +
+
+.PHONY: clean/pkg
+clean/pkg:
+	rm -rf $(CURDIR)/$(PACKAGE_NAME).egg-info/* dist/*
 
 .PHONY: fetch/numpy-stubs
 fetch/numpy-stubs:
