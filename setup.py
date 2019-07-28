@@ -10,13 +10,14 @@ import dzo
 
 
 # License
-with open(path.join(path.dirname(path.abspath(__file__)), 'LICENSE')) as fp:
-    LICENSE = fp.read().strip('\n')
+# with open(path.join(path.dirname(path.abspath(__file__)), 'LICENSE')) as fp:
+#     LICENSE = fp.read().strip('\n')
 
 # Literal
 NAME = 'dzo'
 AUTHOR = 'Moriaki Saigusa'
 AUTHOR_EMAIL = 'moriaki3193@gmail.com'
+LICENSE = 'MIT'
 LONG_DESCRIPTION = 'Python implemented portable and easy-to-use search engine'
 URL = 'https://github.com/moriaki3193/dzo'
 KEYWORDS = 'Python Search Engine'

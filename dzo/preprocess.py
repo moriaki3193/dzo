@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """Preprocess module
 """
-import glob
 import pickle
 from os import path
 from typing import List, Optional, Set
 
 from .indexer import Indexer, NamedIndex, InvIndex
+from .loader import DirectoryLoader
 from .tokenizer.base import TokenizerBase
 
 
@@ -23,47 +23,24 @@ class Preprocessor:
     """Preprocess pipeline class.
     """
 
-    def __init__(self, target_dir: str) -> None:
-        if path.isdir(target_dir):
-            self.target_dir = target_dir
-        else:
-            raise FileNotFoundError(f'Not found {target_dir}')
-
-    def _load_dir(self, ignored_exts: Optional[Set[str]]) -> List[str]:
-        """Returns file paths included in target directory.
-
-        Parameters:
-            ignored_exts: file extensions to be ignored. e.g. {'.py', '.so'}
-
-        Returns:
-            file_paths: a list of file paths.
-        """
-        pathname = path.join(self.target_dir, '**')
-        file_paths = glob.glob(pathname, recursive=True)
-        if ignored_exts is None:
-            return [p for p in file_paths if path.isfile(p)]
-        valid_paths = [p for p in file_paths if _extr_ext(p) not in ignored_exts]
-        return [p for p in valid_paths if path.isfile(p)]
-
-    def preprocess(
+    def __init__(
             self,
-            tokenizer: TokenizerBase,
-            ignored_exts: Optional[Set[str]] = None) -> InvIndex:
+            loader: DirectoryLoader,
+            tokenizer: TokenizerBase) -> None:
+        self._loader = loader
+        self._tokenizer = tokenizer
+
+    def preprocess(self, ignored_exts: Optional[Set[str]] = None) -> InvIndex:
         """A preprocessing pipeline.
         """
-        # Load files
-        file_paths = self._load_dir(ignored_exts=ignored_exts)
-        if not file_paths:
-            raise FileNotFoundError('The directory seems to be empty')
+        docs = self._loader.load(ignored_exts=ignored_exts)
         # Make inverted index
         named_indices: List[NamedIndex] = []
-        for file_path in file_paths:
-            with open(file_path, mode='r') as fp:
-                sentence = fp.read().replace('\n', '')
-                tokens = tokenizer.tokenize(sentence)
-                normalized_tokens = [token.get_normalized() for token in tokens]
+        for doc in docs:
+            tokens = self._tokenizer.tokenize(doc.content)
+            normalized_tokens = [t.get_normalized() for t in tokens]
             index = Indexer.make_index(normalized_tokens)
-            named_indices.append(NamedIndex(file_path, index))
+            named_indices.append(NamedIndex(doc.name, index))
         full_index = Indexer.merge(named_indices)
         inv_index = Indexer.make_inv_index(full_index)
         return inv_index
