@@ -61,7 +61,7 @@ $ make test
 ```
 
 ## Sponsors
-<div style='max-width: 100px;'>
+<div style='max-width: 50px;'>
 
 [![Recipio Inc.](./.images/recipio-logo.png)](http://about.recipio.jp/)
 </div>
