@@ -42,6 +42,9 @@ $ dzo search おにぎり --index-path ./data/inverted-index.pkl
 **WIP**
 
 ## Development
+### Note
+Style of all docstrings for functions and methods have to be **Google Style Python Docstring**. Please refer to [napoleon style guide](https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_google.html).
+
 ### Commands
 ```shell
 # Building cython extensions.
