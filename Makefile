@@ -1,16 +1,19 @@
 PACKAGE_NAME := dzo
 
-.PHONY: test
-test:
-	@python3 $(CURDIR)/setup.py test
-
 .PHONY: check/lint
 check/lint:
-	@pylint $(CURDIR)/$(PACKAGE_NAME)
+	-@pylint $(CURDIR)/$(PACKAGE_NAME)
 
 .PHONY: check/type
 check/type:
-	@MYPYPATH=$(CURDIR)/stubs mypy @.mypy_check_files --config-file=$(CURDIR)/mypy.ini
+	-@MYPYPATH=$(CURDIR)/stubs mypy @.mypy_check_files --config-file=$(CURDIR)/mypy.ini
+
+.PHONY: check
+check: check/type check/lint
+
+.PHONY: test
+test: check
+	@python3 $(CURDIR)/setup.py test
 
 .PHONY: build/ext
 build/ext:
