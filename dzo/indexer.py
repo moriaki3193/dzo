@@ -4,16 +4,16 @@
 from typing import Dict, List, NamedTuple
 
 
-Index = Dict[str, List[int]]
-FullIndex = Dict[str, Dict[str, List[int]]]
-InvIndex = Dict[str, Dict[str, List[int]]]
+Index = Dict[str, List[int]]                 # {'<Token>': [<Position>, ...]}
+FullIndex = Dict[str, Dict[str, List[int]]]  # {'<DocumentID>': {'<Token>': [<Position>, ...]}}
+InvIndex = Dict[str, Dict[str, List[int]]]   # {'<Token>': {'<DocumentID>': [<Position>, ...]}}
 
 
 class NamedIndex(NamedTuple):
     """Index with its document title.
     """
     name: str
-    index: Index
+    idx: Index
 
 
 class Indexer:
@@ -78,7 +78,7 @@ class Indexer:
         Returns:
             A full index of given indices.
         """
-        return {name: index for name, index in named_indices}
+        return {name: idx for name, idx in named_indices}
 
     @staticmethod
     def make_inv_index(full_index: FullIndex) -> InvIndex:

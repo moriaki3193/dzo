@@ -4,14 +4,9 @@
 import glob
 import logging
 import os.path
-from typing import List, NamedTuple, Optional, Set
+from typing import List, Optional, Set
 
-
-class _Document(NamedTuple):
-    """A document class
-    """
-    name: str
-    content: str
+from ..types import Document
 
 
 class DirectoryLoader:
@@ -35,7 +30,7 @@ class DirectoryLoader:
     def _get_file_paths(self, ignored_exts: Optional[Set[str]]) -> List[str]:
         """Returns file paths included in target directory.
 
-        Parameters:
+        Args:
             ignored_exts: file extensions to be ignored. e.g. {'.py', '.so'}
 
         Returns:
@@ -48,15 +43,21 @@ class DirectoryLoader:
         file_paths = [p for p in all_paths if self._extr_ext(p) not in ignored_exts]
         return [p for p in file_paths if os.path.isfile(p)]
 
-    def load(self, ignored_exts: Optional[Set[str]] = None) -> List[_Document]:
+    def load(self, ignored_exts: Optional[Set[str]] = None) -> List[Document]:
         """Load the target directory and load all of the files.
+
+        Args:
+            ignored_exts: File extensions to be ignored.
+
+        Returns:
+            A list of documents.
         """
         # Read file paths
         file_paths = self._get_file_paths(ignored_exts=ignored_exts)
         if not file_paths:
             raise FileNotFoundError('The directory seems to be empty')
         # Read all files
-        docs: List[_Document] = []
+        docs: List[Document] = []
         invalid_doc_paths: List[str] = []
         for file_path in file_paths:
             with open(file_path, mode='r') as fp:
@@ -64,9 +65,11 @@ class DirectoryLoader:
                     content = fp.read().replace('\n', '')
                 except UnicodeDecodeError:
                     invalid_doc_paths.append(file_path)
-            docs.append(_Document(file_path, content))
-        if not invalid_doc_paths:
+            docs.append(Document(file_path, content))
+
+        if invalid_doc_paths:
             listed_paths = '\n'.join(invalid_doc_paths)
             msg = f'Files in the following paths seem to be binary files:\n{listed_paths}'
             logging.warning(msg)
+
         return docs

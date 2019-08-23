@@ -17,5 +17,5 @@ class NGramTokenizer(TokenizerBase):
         """N-gram tokenization.
         """
         if len(sentence) < self.n:
-            return [NGramToken(sentence, sentence)]
+            return [NGramToken(sentence)]
         return [NGramToken(sentence[i:i+self.n]) for i in range(len(sentence)-self.n+1)]

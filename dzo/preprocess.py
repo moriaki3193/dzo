@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Preprocess module
 """
+import logging
 import pickle
 from os import path
 from typing import List, Optional, Set
@@ -12,28 +13,53 @@ from .tokenizer.base import TokenizerBase
 
 def _extr_ext(p: str) -> str:
     """Extract a file extension.
+
+    Example:
+        >>> p = '/path/to/file.ext'
+        >>> _extr_ext(p)
+        >>> '.ext'
     """
     fname = path.basename(p)
     _, ext = path.splitext(fname)
     return ext
 
 
-# TODO parallelization: tokenization & indexing steps
 class Preprocessor:
     """Preprocess pipeline class.
+
+    Todo:
+        - parallelization: tokeninzation & indexing steps
     """
 
     def __init__(
             self,
             loader: DirectoryLoader,
-            tokenizer: TokenizerBase) -> None:
+            tokenizer: TokenizerBase
+        ) -> None:
         self._loader = loader
         self._tokenizer = tokenizer
 
     def preprocess(self, ignored_exts: Optional[Set[str]] = None) -> InvIndex:
         """A preprocessing pipeline.
+
+        This method consists of some steps;
+        1) Loading documents (loaders are in charge of this step).
+        2) Tokenization (tokenizers are in chargs of this step).
+        3) Make an inverted index of documents represented as a series of tokens.
+
+        Args:
+            ignored_exts: File extensions to be ignored. Defaults to None.
+
+        Returns:
+            An inverted index.
         """
+        if (isinstance(self._loader, DirectoryLoader)) and (ignored_exts is not None):
+            exts = ', '.join(ignored_exts)
+            msg = f'Files whose extension is {exts} will be ignored'
+            logging.info(msg)
+
         docs = self._loader.load(ignored_exts=ignored_exts)
+
         # Make inverted index
         named_indices: List[NamedIndex] = []
         for doc in docs:
@@ -53,3 +79,6 @@ class Preprocessor:
             raise FileExistsError
         with open(result_path, mode='wb') as fp:
             pickle.dump(inv_index, fp)
+
+        msg = f'Successfully saved the inverted index to {result_path}'
+        logging.info(msg)

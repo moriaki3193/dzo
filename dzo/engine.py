@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Engine module
 """
+import logging
 import pickle
 from os import path
 
@@ -15,10 +16,14 @@ class Engine:
     def __init__(
             self,
             index_path: str,
-            tokenizer: TokenizerBase) -> None:
+            tokenizer: TokenizerBase,
+        ) -> None:
         """Initialize the search engine.
         """
         self._inv_index = self.__load_inv_index(index_path)
+
+        logging.info('Loaded inverted index')
+
         self._tokenizer = tokenizer
 
     @staticmethod
@@ -40,7 +45,6 @@ class Engine:
             results: WIP
         """
         tokens = self._tokenizer.tokenize(query)
-        print(tokens)
         results = []
         for token in tokens:
             if token.get_normalized() in self._inv_index.keys():
