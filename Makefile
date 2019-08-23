@@ -63,3 +63,8 @@ fetch/numpy-stubs:
 	@git clone --depth=1 https://github.com/machinalis/mypy-data.git $(CURDIR)/stubs/tmp
 	@mv $(CURDIR)/stubs/tmp/numpy-mypy/numpy $(CURDIR)/stubs/numpy
 	@rm -rf $(CURDIR)/stubs/tmp
+
+.PHONY: list/dicdir
+list/dicdir:
+	@echo `mecab-config --dicdir`/...
+	@ls `mecab-config --dicdir`

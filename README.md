@@ -59,6 +59,9 @@ $ make check/type
 # Running tests using pytest.
 $ make test
 
+# Look up dictionary directories for MeCab
+$ make list/dicdir
+
 # Other utility commands are available.
 # See Makefile for more details.
 ```

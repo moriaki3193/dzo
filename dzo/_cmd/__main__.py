@@ -17,16 +17,29 @@ subparsers = parser.add_subparsers(title='subcommands', description='search')
 # Create the parser for the "preprocess" command
 parser_preprocess = subparsers.add_parser(
     'preprocess',
-    help='preprocess <dir> [--output /path/to/output]')
-parser_preprocess.add_argument('target_dir', type=str, help='search target directory')
-parser_preprocess.add_argument('result_path', type=str, help='a path to preprocess result')
-parser_preprocess.add_argument('--ignore', nargs='+', help='file extensions to be ignored')
+    help='preprocess [options] <target_dir> <result_path>')
+parser_preprocess.add_argument('target_dir',
+                               type=str,
+                               help='search target directory')
+parser_preprocess.add_argument('result_path',
+                               type=str,
+                               help='a path to preprocess result')
+parser_preprocess.add_argument('--tokenizer',
+                               type=str,
+                               help='string tokenizer (default: ngram)',
+                               default='ngram')
+parser_preprocess.add_argument('--dicdir',
+                               type=str,
+                               help='MeCab dictionary directory')
+parser_preprocess.add_argument('--ignore',
+                               nargs='+',
+                               help='file extensions to be ignored')
 parser_preprocess.set_defaults(handler=preprocess)
 
 # Create the parser for the "search" command
 parser_search = subparsers.add_parser(
     'search',
-    help='search <query> [--index-path /path/to/resource]')
+    help='search [options] <query>')
 parser_search.add_argument('query', type=str, help='search query')
 parser_search.add_argument(
     '--index-path',
