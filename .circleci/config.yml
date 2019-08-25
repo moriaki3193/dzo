@@ -48,9 +48,13 @@ jobs:
       - run:
           command: |
             echo running test
-            pip3 install --user Cython
+            pip3 install --user Cython codecov
             pip3 install --user .
             make test
+      - run:
+          command: |
+            echo coverage report
+            codecov
 
   deploy_job:
     <<: *setup
