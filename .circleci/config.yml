@@ -1,0 +1,71 @@
+# Python CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-python/ for more details
+
+references:
+  setup: &setup
+    working_directory: ~/dzo
+    docker:
+      - image: circleci/python:3.7
+  restore: &restore
+    - restore_cache:
+        keys:
+          - source-{{ .Branch }}-{{ .Revision }}
+
+jobs:
+  build_job:
+    <<: *setup
+    steps:
+      - checkout
+      - run:
+        name: install package
+        command: pip3 install .
+      - save_cache:
+          key: source-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - "."
+      
+  check_lint_job:
+    <<: *setup
+    steps:
+      <<: *restore
+      run: make check/lint
+
+  check_type:
+    <<: *setup
+    steps:
+      <<: *restore
+      run: make check/type
+
+  test:
+    <<: *setup
+    steps:
+      <<: *restore
+      run: make test
+
+  deploy_job:
+    working_directory: ~/dzo
+    docker:
+      - image: circleci/python:3.7
+
+workflows:
+  version: 2
+  build_workflow:
+    jobs:
+      - build_job
+      - check_lint_job
+        requires:
+          - build_job
+      - check_type_job
+        requires:
+          - build_job
+      - test_job
+        requires:
+          - build_job
+      - deploy_job:
+        requires:
+          - check_lint_job
+          - check_type_job
+          - test_job
+        filters:
+          - master
