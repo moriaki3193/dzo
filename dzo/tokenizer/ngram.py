@@ -4,11 +4,15 @@
 from .base import TokenizerBase
 from .token import NGramToken
 from .types import NGramTokens
+from .._meta import __VERSION
 
 
 class NGramTokenizer(TokenizerBase):
     """N-gram tokenizer.
     """
+
+    name: str = 'NGramTokenizer'
+    version: str = __VERSION
 
     def __init__(self, n: int = 3) -> None:
         self.n = n

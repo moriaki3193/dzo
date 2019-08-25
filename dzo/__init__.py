@@ -3,8 +3,10 @@
 """
 import logging
 
+from ._meta import __AUTHOR, __VERSION
 
-__version__ = '0.0.2'
-__author__ = 'Moriaki Saigusa'
+
+__version__ = __VERSION
+__author__ = __AUTHOR
 
 DEFAULT_LOG_LEVEL: int = logging.DEBUG

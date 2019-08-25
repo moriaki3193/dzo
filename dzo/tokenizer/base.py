@@ -16,7 +16,14 @@ class TokenBase:
 
 class TokenizerBase(metaclass=ABCMeta):
     """A base class for tokenizers.
+
+    Attributes:
+        name: tokenizer's name
+        version: tokenizer's version. e.g. 'x.y.z'.
     """
+
+    name: str
+    version: str
 
     @abstractmethod
     def tokenize(self, sentence: str):

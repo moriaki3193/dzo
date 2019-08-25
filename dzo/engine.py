@@ -5,6 +5,7 @@ import logging
 import pickle
 from os import path
 
+from ._meta import __VERSION
 from .indexer import InvIndex
 from .tokenizer.base import TokenizerBase
 
@@ -28,13 +29,20 @@ class Engine:
 
     @staticmethod
     def __load_inv_index(index_path: str) -> InvIndex:
+        version: str
+        inv_index: InvIndex
+
         if not path.exists(index_path):
             raise FileNotFoundError
         with open(index_path, mode='rb') as fp:
-            inv_index: InvIndex = pickle.load(fp)
+            _, version, inv_index = pickle.load(fp)
+
+        if version != __VERSION:
+            msg = f'Versions differ: current {__VERSION}, index {version}'
+            logging.warning(msg)
+
         return inv_index
 
-    # TODO determine the index.
     def search(self, query: str) -> list:  # TODO type hinting
         """Returns search results.
 

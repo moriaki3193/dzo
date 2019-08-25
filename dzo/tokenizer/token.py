@@ -4,7 +4,6 @@
 from typing import NamedTuple, Tuple
 
 
-# TODO make token classes have interface `get_normalized()`.
 class NGramToken(NamedTuple):
     """Result schema for NGramTokenizer.tokeinze method.
     """
