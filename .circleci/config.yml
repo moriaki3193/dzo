@@ -1,0 +1,85 @@
+references:
+  setup: &setup
+    working_directory: ~/dzo
+    docker:
+      - image: circleci/python:3.7
+
+jobs:
+  build_job:
+    <<: *setup
+    steps:
+      - checkout
+      - run:
+          name: install package
+          command: |
+            echo package installation
+            pip3 install --user Cython
+            pip3 install --user .
+      - save_cache:
+          key: source-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - "."
+      
+  check_lint_job:
+    <<: *setup
+    steps:
+      - restore_cache:
+          key: source-{{ .Branch }}-{{ .Revision }}
+      - run:
+          command: |
+            echo running lint check
+            make check/lint
+
+  check_type_job:
+    <<: *setup
+    steps:
+      - restore_cache:
+          key: source-{{ .Branch }}-{{ .Revision }}
+      - run:
+          command: |
+            echo running type check
+            make check/type
+
+  test_job:
+    <<: *setup
+    steps:
+      - restore_cache:
+          key: source-{{ .Branch }}-{{ .Revision }}
+      - run:
+          command: |
+            echo running test
+            pip3 install --user Cython
+            pip3 install --user .
+            make test
+
+  deploy_job:
+    <<: *setup
+    steps:
+      - restore_cache:
+          key: source-{{ .Branch }}-{{ .Revision }}
+      - run:
+          command: |
+            echo deployment
+
+workflows:
+  version: 2
+  build_workflow:
+    jobs:
+      - build_job
+      - check_lint_job:
+          requires:
+            - build_job
+      - check_type_job:
+          requires:
+            - build_job
+      - test_job:
+          requires:
+            - build_job
+      - deploy_job:
+          requires:
+            - check_lint_job
+            - check_type_job
+            - test_job
+          filters:
+            branches:
+              only: master
