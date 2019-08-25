@@ -6,7 +6,7 @@ import MeCab
 from .base import TokenizerBase
 from .token import MeCabToken
 from .types import MeCabTokens
-from .._meta import __VERSION
+from .._meta import _VERSION
 
 
 class MeCabTokenizer(TokenizerBase):
@@ -14,7 +14,7 @@ class MeCabTokenizer(TokenizerBase):
     """
 
     name: str = 'MeCabTokenizer'
-    version: str = __VERSION
+    version: str = _VERSION
 
     def __init__(self, tagger: MeCab.Tagger) -> None:
         self.tagger = tagger

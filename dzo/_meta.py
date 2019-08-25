@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
 """Constants
 """
-__AUTHOR = 'Moriaki Saigusa'
-__VERSION = '0.0.3'
+_AUTHOR = 'Moriaki Saigusa'
+_VERSION = '0.0.3'

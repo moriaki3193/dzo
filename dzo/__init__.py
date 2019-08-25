@@ -3,10 +3,10 @@
 """
 import logging
 
-from ._meta import __AUTHOR, __VERSION
+from ._meta import _AUTHOR, _VERSION
 
 
-__version__ = __VERSION
-__author__ = __AUTHOR
+__version__ = _VERSION
+__author__ = _AUTHOR
 
 DEFAULT_LOG_LEVEL: int = logging.DEBUG

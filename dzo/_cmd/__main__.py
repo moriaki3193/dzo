@@ -37,16 +37,16 @@ parser_preprocess.add_argument('--ignore',
 parser_preprocess.set_defaults(handler=preprocess)
 
 # Create the parser for the "search" command
-parser_search = subparsers.add_parser(
-    'search',
-    help='search [options] <query>')
+parser_search = subparsers.add_parser('search', help='search [options] <query>')
 parser_search.add_argument('query', type=str, help='search query')
-parser_search.add_argument(
-    '--index-path',
-    '-i',
-    type=str,
-    help='a path to inverted index',
-    required=True)
+parser_search.add_argument('--index-path',
+                           '-i',
+                           type=str,
+                           help='a path to inverted index',
+                           required=True)
+parser_search.add_argument('--dicdir',
+                           type=str,
+                           help='MeCab dictionary directory')
 parser_search.set_defaults(handler=search)
 
 

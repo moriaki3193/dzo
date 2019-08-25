@@ -71,14 +71,14 @@ class Preprocessor:
         inv_index = Indexer.make_inv_index(full_index)
         return inv_index
 
-    @staticmethod
-    def save(inv_index: InvIndex, result_path: str) -> None:
+    def save(self, inv_index: InvIndex, result_path: str) -> None:
         """save the results of preprocess pipeline.
         """
         if path.exists(result_path):
             raise FileExistsError
         with open(result_path, mode='wb') as fp:
-            pickle.dump(inv_index, fp)
+            obj = (self._tokenizer.name, self._tokenizer.version, inv_index)
+            pickle.dump(obj, fp)
 
         msg = f'Successfully saved the inverted index to {result_path}'
         logging.info(msg)
