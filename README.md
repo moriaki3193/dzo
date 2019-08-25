@@ -23,11 +23,19 @@ $ pip install -e .[dev]  # installs extra dependencies for development.
 ### Command line tool
 #### Make inverted indices
 ```shell
-# Local directory
-$ dzo preprocess <target_dir> <result_path>
+# display help
+$ dzo preprocess -h
 
-# e.g.
-$ dzo preprocess ./data/products ./data/inverted-index.pkl
+# Local directory
+## 1. n-gram tokenization
+$ dzo preprocess <target_dir> <result_path>
+### e.g.
+$ dzo preprocess ./data/products ./inverted-index.pkl
+
+## 2. mecab tokenization
+$ dzo preprocess --tokenizer=mecab --dicdir=<dicdir> <target_dir> <result_path>
+### e.g.
+$ dzo preprocess --tokenizer=mecab --dicdir=/usr/local/lib/mecab/dic/ipadic ./data ./inverted-index.pkl
 ```
 
 #### Search
