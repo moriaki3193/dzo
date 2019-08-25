@@ -2,9 +2,9 @@
 """Engine module
 """
 import os
+from os import path
 import logging
 import pickle
-from os import path
 from typing import Optional, Tuple
 
 import MeCab
