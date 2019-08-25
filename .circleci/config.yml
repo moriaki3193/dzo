@@ -88,6 +88,7 @@ workflows:
             - check_type_job
             - test_job
           filters:
+            tags:
+              only: '/^v\d+\.\d+\.\d+/'
             branches:
-              only:
-                - master
+              ignore: '/.*/'
