@@ -1,16 +1,8 @@
-# Python CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-python/ for more details
-
 references:
   setup: &setup
     working_directory: ~/dzo
     docker:
       - image: circleci/python:3.7
-  restore: &restore
-    - restore_cache:
-        keys:
-          - source-{{ .Branch }}-{{ .Revision }}
 
 jobs:
   build_job:
@@ -18,8 +10,11 @@ jobs:
     steps:
       - checkout
       - run:
-        name: install package
-        command: pip3 install .
+          name: install package
+          command: |
+            echo package installation
+            pip3 install --user Cython
+            pip3 install --user .
       - save_cache:
           key: source-{{ .Branch }}-{{ .Revision }}
           paths:
@@ -28,44 +23,63 @@ jobs:
   check_lint_job:
     <<: *setup
     steps:
-      <<: *restore
-      run: make check/lint
+      - restore_cache:
+          key: source-{{ .Branch }}-{{ .Revision }}
+      - run:
+          command: |
+            echo running lint check
+            make check/lint
 
-  check_type:
+  check_type_job:
     <<: *setup
     steps:
-      <<: *restore
-      run: make check/type
+      - restore_cache:
+          key: source-{{ .Branch }}-{{ .Revision }}
+      - run:
+          command: |
+            echo running type check
+            make check/type
 
-  test:
+  test_job:
     <<: *setup
     steps:
-      <<: *restore
-      run: make test
+      - restore_cache:
+          key: source-{{ .Branch }}-{{ .Revision }}
+      - run:
+          command: |
+            echo running test
+            pip3 install --user Cython
+            pip3 install --user .
+            make test
 
   deploy_job:
-    working_directory: ~/dzo
-    docker:
-      - image: circleci/python:3.7
+    <<: *setup
+    steps:
+      - restore_cache:
+          key: source-{{ .Branch }}-{{ .Revision }}
+      - run:
+          command: |
+            echo deployment
 
 workflows:
   version: 2
   build_workflow:
     jobs:
       - build_job
-      - check_lint_job
-        requires:
-          - build_job
-      - check_type_job
-        requires:
-          - build_job
-      - test_job
-        requires:
-          - build_job
+      - check_lint_job:
+          requires:
+            - build_job
+      - check_type_job:
+          requires:
+            - build_job
+      - test_job:
+          requires:
+            - build_job
       - deploy_job:
-        requires:
-          - check_lint_job
-          - check_type_job
-          - test_job
-        filters:
-          - master
+          requires:
+            - check_lint_job
+            - check_type_job
+            - test_job
+          filters:
+            branches:
+              only: master
