@@ -12,7 +12,7 @@ check/type:
 check: check/type check/lint
 
 .PHONY: test
-test: check
+test:
 	@python3 $(CURDIR)/setup.py test
 
 .PHONY: build/ext
