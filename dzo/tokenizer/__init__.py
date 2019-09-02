@@ -3,3 +3,4 @@
 """
 from .mecab import MeCabTokenizer
 from .ngram import NGramTokenizer
+from .whitespace import WhitespaceTokenizer

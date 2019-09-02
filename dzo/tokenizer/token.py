@@ -5,7 +5,7 @@ from typing import NamedTuple, Tuple
 
 
 class NGramToken(NamedTuple):
-    """Result schema for NGramTokenizer.tokeinze method.
+    """Result schema for NGramTokenizer().tokeinze instance method.
     """
     surface: str
 
@@ -14,7 +14,7 @@ class NGramToken(NamedTuple):
 
 
 class MeCabToken(NamedTuple):
-    """Result schema for MeCabTokenizer.tokenize method.
+    """Result schema for MeCabTokenizer().tokenize instance method.
     """
     surface: str
     pos: Tuple[str, ...]
@@ -26,3 +26,12 @@ class MeCabToken(NamedTuple):
 
     def get_normalized(self) -> str:  # pylint: disable=missing-docstring
         return self.base_form
+
+
+class WhitespaceToken(NamedTuple):
+    """Result schema for WhitespaceTokenizer().tokenize instance method.
+    """
+    surface: str
+
+    def get_normalized(self) -> str:  # pylint: disable=missing-docstring
+        return self.surface
