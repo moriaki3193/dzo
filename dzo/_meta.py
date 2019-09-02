@@ -2,4 +2,4 @@
 """Constants
 """
 _AUTHOR = 'Moriaki Saigusa'
-_VERSION = '0.0.4'
+_VERSION = '0.0.6'
