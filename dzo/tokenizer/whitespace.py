@@ -38,4 +38,4 @@ class WhitespaceTokenizer(TokenizerBase):
             a list of tokens.
         """
         res = re.split(r'\s+', sentence)
-        return [tok for tok in res if tok]
+        return [WhitespaceToken(tok) for tok in res if tok]
