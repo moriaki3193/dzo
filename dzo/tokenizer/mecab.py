@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 """MeCab tokenizer module
 """
+from typing import List
+
 import MeCab
 
 from .base import TokenizerBase
 from .token import MeCabToken
-from .types import MeCabTokens
 from .._meta import _VERSION
+
+
+MeCabTokens = List[MeCabToken]
 
 
 class MeCabTokenizer(TokenizerBase):
