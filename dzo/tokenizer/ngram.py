@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 """N-gram tokenizer module
 """
+from typing import List
+
 from .base import TokenizerBase
 from .token import NGramToken
-from .types import NGramTokens
 from .._meta import _VERSION
+
+
+NGramTokens = List[NGramToken]
 
 
 class NGramTokenizer(TokenizerBase):
