@@ -6,6 +6,7 @@
 [![version](https://img.shields.io/pypi/v/dzo.svg)](https://pypi.org/project/dzo/)
 ![pyversions](https://img.shields.io/pypi/pyversions/dzo.svg)
 ![codecov](https://codecov.io/gh/moriaki3193/dzo/branch/master/graph/badge.svg)
+[![CircleCI](https://circleci.com/gh/moriaki3193/dzo/tree/master.svg?style=svg)](https://circleci.com/gh/moriaki3193/dzo/tree/master)
 
 Python implemented portable and easy-to-use search engine.
 
