@@ -25,6 +25,14 @@ class MeCabTokenizer(TokenizerBase):
 
     def tokenize(self, sentence: str) -> MeCabTokens:
         """MeCab morphological analysis tokenization.
+
+        Example:
+            >>> d = '/path/to/dicdir'
+            >>> tagger = MeCab.Tagger(d)  # import MeCab package in advance
+            >>> tokenizer = MeCabTokenizer(tagger)
+            >>> sentence = '隣の客はよく柿食う客だ'
+            >>> [t.get_normalized() for t in tokenizer.tokenize(sentence)]
+            ['隣', 'の', '客', 'は', 'よく', '柿', '食う', '客', 'だ']
         """
         self.tagger.parse('')
         node = self.tagger.parseToNode(sentence)
