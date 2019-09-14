@@ -1,3 +1,4 @@
 include LICENSE
+include VERSION
 exclude README.md
 exclude Makefile

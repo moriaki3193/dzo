@@ -1,17 +1,25 @@
 # -*- coding: utf-8 -*-
 """N-gram tokenizer module
 """
-from typing import List
+from typing import List, NamedTuple, cast
 
-from .base import TokenizerBase
-from .token import NGramToken
-from .._meta import _VERSION
-
-
-NGramTokens = List[NGramToken]
+from ..annot import Token
+from ..base import AbstractTokenizer
+from ..const import _VERSION
 
 
-class NGramTokenizer(TokenizerBase):
+class NGramToken(NamedTuple):
+    """Result schema for NGramTokenizer().tokeinze instance method.
+    """
+
+    surface: str
+
+    @property
+    def normalized(self) -> str:  # pylint: disable=missing-docstring
+        return self.surface
+
+
+class NGramTokenizer(AbstractTokenizer):
     """N-gram tokenizer.
     """
 
@@ -21,9 +29,22 @@ class NGramTokenizer(TokenizerBase):
     def __init__(self, n: int = 3) -> None:
         self.n = n
 
-    def tokenize(self, sentence: str) -> NGramTokens:
+    def tokenize(self, sentence: str) -> List[Token]:
         """N-gram tokenization.
+
+        Example:
+            >>> tokenizer = NGramTokenizer(n=3)
+            >>> sentence = 'hello'
+            >>> [t.normalized for t in tokenizer.tokenize(sentence)]
+            ['hel', 'ell', 'llo']
+
+        Args:
+            sentence: a sentence to be tokenized.
+
+        Returns:
+            a list of tokens.
         """
         if len(sentence) < self.n:
-            return [NGramToken(sentence)]
-        return [NGramToken(sentence[i:i+self.n]) for i in range(len(sentence)-self.n+1)]
+            return [cast(Token, NGramToken(sentence))]
+        l = len(sentence)
+        return [cast(Token, NGramToken(sentence[i:i+self.n])) for i in range(l-self.n+1)]

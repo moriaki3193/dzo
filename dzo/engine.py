@@ -9,15 +9,17 @@ from typing import Optional, Tuple
 
 import MeCab
 
-from ._meta import _VERSION
+from .annot import Tokenizer
+from .const import _VERSION
 from .indexer import InvIndex
 from .tokenizer import MeCabTokenizer, NGramTokenizer
-from .tokenizer.base import TokenizerBase
 
 
 class Engine:
     """Engine class.
     """
+
+    version: str = _VERSION
 
     def __init__(
             self,
@@ -26,6 +28,8 @@ class Engine:
         ) -> None:
         """Initialize the search engine.
         """
+        _inv_index: InvIndex
+        _tokenizer: Tokenizer
         _inv_index, _tokenizer = self.__load_inv_index(index_path, dicdir)
 
         logging.info('Loaded inverted index')
@@ -33,26 +37,26 @@ class Engine:
         self._inv_index = _inv_index
         self._tokenizer = _tokenizer
 
-    @staticmethod
     def __load_inv_index(
+            self,
             index_path: str,
             dicdir: Optional[str]
-        ) -> Tuple[InvIndex, TokenizerBase]:
+        ) -> Tuple[InvIndex, Tokenizer]:
         """Load inverted index.
         """
         name: str
         version: str
         inv_index: InvIndex
 
-        tokenizer: TokenizerBase
+        tokenizer: Tokenizer
 
         if not path.exists(index_path):
             raise FileNotFoundError
         with open(index_path, mode='rb') as fp:
             name, version, inv_index = pickle.load(fp)
 
-        if version != _VERSION:
-            msg = f'Versions differ: current {_VERSION}, index {version}'
+        if version != self.version:
+            msg = f'Versions differ: current {self.version}, index {version}'
             logging.warning(msg)
 
         if name == MeCabTokenizer.name:
@@ -82,6 +86,6 @@ class Engine:
         tokens = self._tokenizer.tokenize(query)
         results = []
         for token in tokens:
-            if token.get_normalized() in self._inv_index.keys():
-                results.extend([name for name in self._inv_index[token.get_normalized()].keys()])
+            if token.normalized in self._inv_index.keys():
+                results.extend([name for name in self._inv_index[token.normalized].keys()])
         return results

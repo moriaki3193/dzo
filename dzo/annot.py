@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=missing-docstring, no-self-use, unused-argument
 """Types module
 
 All of the types defined in this module are specific to this package.
 """
-from abc import ABCMeta, abstractmethod
-from typing import List, NamedTuple, TypeVar
-
-
-Loader = TypeVar('Loader', bound='AbstractLoader')
-Token = TypeVar('Token', bound='AbstractToken')
-Tokenizer = TypeVar('Tokenizer', bound='AbstractTokenizer')
+from typing import List, NamedTuple
+from typing_extensions import Protocol
 
 
 class Document(NamedTuple):
@@ -19,47 +15,23 @@ class Document(NamedTuple):
     content: str
 
 
-class AbstractLoader(metaclass=ABCMeta):
-    """An abstract base class for loaders.
+class Loader(Protocol):
 
-    All loaders inherit this meta“ class should have implementations of methods
-    defined in this class.
-    """
-
-    @abstractmethod
     def load(self) -> List[Document]:
-        """This method returns a list of documents.
-        """
-        raise NotImplementedError
+        ...
 
 
-class AbstractToken(metaclass=ABCMeta):
-    """An abstract base class for tokens.
+class Token(Protocol):
 
-    All tokens inherit this base meta should have implementations of methods
-    defined in this class.
-    """
-
-    @abstractmethod
     @property
     def normalized(self) -> str:
-        """Returns a normalized form.
-        """
-        raise NotImplementedError
+        ...
 
 
-class AbstractTokenizer(metaclass=ABCMeta):
-    """Ab abstract base class for tokenizers.
-
-    All tokenizers inherit this meta class should have implementations of methods
-    defined in this class.
-    """
+class Tokenizer(Protocol):
 
     name: str
     version: str
 
-    @abstractmethod
     def tokenize(self, sentence: str) -> List[Token]:
-        """Tokenize a given sentence.
-        """
-        raise NotImplementedError
+        ...
