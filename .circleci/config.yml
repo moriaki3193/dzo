@@ -13,7 +13,7 @@ jobs:
           name: install package
           command: |
             echo package installation
-            pip3 install --user Cython
+            pip3 install --user Cython typing-extensions
             pip3 install --user .
       - save_cache:
           key: source-{{ .Branch }}-{{ .Revision }}
