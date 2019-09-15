@@ -1,19 +1,33 @@
 # -*- coding: utf-8 -*-
 """MeCab tokenizer module
 """
-from typing import List
+from typing import List, NamedTuple, Tuple
 
 import MeCab
 
-from .base import TokenizerBase
-from .token import MeCabToken
-from .._meta import _VERSION
+from ..annot import Token
+from ..base import AbstractTokenizer
+from ..const import _VERSION
 
 
-MeCabTokens = List[MeCabToken]
+class MeCabToken(NamedTuple):
+    """Result schema for MeCabTokenizer().tokenize instance method.
+    """
+
+    surface: str
+    pos: Tuple[str, ...]
+    infl_type: str
+    infl_form: str
+    base_form: str
+    reading: str
+    phonetic: str
+
+    @property
+    def normalized(self) -> str:  # pylint: disable=missing-docstring
+        return self.base_form
 
 
-class MeCabTokenizer(TokenizerBase):
+class MeCabTokenizer(AbstractTokenizer):
     """MeCab tokenizer.
     """
 
@@ -23,7 +37,7 @@ class MeCabTokenizer(TokenizerBase):
     def __init__(self, tagger: MeCab.Tagger) -> None:
         self.tagger = tagger
 
-    def tokenize(self, sentence: str) -> MeCabTokens:
+    def tokenize(self, sentence: str) -> List[Token]:
         """MeCab morphological analysis tokenization.
 
         Example:
@@ -31,12 +45,18 @@ class MeCabTokenizer(TokenizerBase):
             >>> tagger = MeCab.Tagger(d)  # import MeCab package in advance
             >>> tokenizer = MeCabTokenizer(tagger)
             >>> sentence = '隣の客はよく柿食う客だ'
-            >>> [t.get_normalized() for t in tokenizer.tokenize(sentence)]
+            >>> [t.normalized for t in tokenizer.tokenize(sentence)]
             ['隣', 'の', '客', 'は', 'よく', '柿', '食う', '客', 'だ']
+
+        Args:
+            sentence: a sentence to be tokenized.
+
+        Returns:
+            a list of tokens.
         """
         self.tagger.parse('')
         node = self.tagger.parseToNode(sentence)
-        tokens: MeCabTokens = []
+        tokens: List[Token] = []
         while node:
             if node.surface:
                 surface = node.surface

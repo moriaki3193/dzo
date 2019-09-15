@@ -28,7 +28,7 @@ ZIP_SAFE = False
 PACKAGES = find_packages(exclude=('tests'))
 TESTS_REQUIRE = ['pytest', 'pytest-cov']
 SETUP_REQUIRES = ['pytest-runner']
-INSTALL_REQUIRES = ['Cython', 'numpy', 'scipy', 'mecab-python3']
+INSTALL_REQUIRES = ['Cython', 'numpy', 'scipy', 'mecab-python3', 'typing-extensions']
 CLASSIFIERS = [
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python :: 3.7',

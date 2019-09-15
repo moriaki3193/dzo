@@ -7,10 +7,10 @@ from os import path
 import MeCab
 
 from . import ExitStatus
+from ..annot import Tokenizer
 from ..indexer import InvIndex
 from ..loader import DirectoryLoader
 from ..preprocess import Preprocessor
-from ..tokenizer.base import TokenizerBase
 from ..tokenizer.mecab import MeCabTokenizer
 from ..tokenizer.ngram import NGramTokenizer
 
@@ -21,7 +21,7 @@ def preprocess(args: Namespace) -> ExitStatus:
     try:
         directory_loader = DirectoryLoader(args.target_dir)
         # parse --tokenizer option
-        tokenizer: TokenizerBase
+        tokenizer: Tokenizer
         if hasattr(args, 'tokenizer'):
             # NGramTokenizer
             if args.tokenizer == 'ngram':

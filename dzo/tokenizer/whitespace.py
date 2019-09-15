@@ -2,17 +2,25 @@
 """Whitespace tokenizer module.
 """
 import re
-from typing import List
+from typing import NamedTuple, List, cast
 
-from .base import TokenizerBase
-from .token import WhitespaceToken
-from .._meta import _VERSION
-
-
-WhitespaceTokens = List[WhitespaceToken]
+from ..annot import Token
+from ..base import AbstractTokenizer
+from ..const import _VERSION
 
 
-class WhitespaceTokenizer(TokenizerBase):
+class WhitespaceToken(NamedTuple):
+    """Result schema for WhitespaceTokenizer().tokenize instance method.
+    """
+
+    surface: str
+
+    @property
+    def normalized(self) -> str:  # pylint: disable=missing-docstring
+        return self.surface
+
+
+class WhitespaceTokenizer(AbstractTokenizer):
     """Whitespace tokenizer.
     """
 
@@ -22,13 +30,14 @@ class WhitespaceTokenizer(TokenizerBase):
     def __init__(self) -> None:
         pass
 
-    def tokenize(self, sentence: str) -> WhitespaceTokens:
+    @staticmethod
+    def tokenize(sentence: str) -> List[Token]:
         """Tokenization by splitting sentence by whitespaces simply.
 
         Example:
             >>> tokenizer = WhitespaceTokenizer()
-            >>> s = 'super hyper ultra miracle romantic sentence'
-            >>> tokenizer.tokenize(s)
+            >>> sentence = 'super hyper ultra miracle romantic sentence'
+            >>> [t.normalized for t in tokenizer.tokenize(sentence)]
             ['super', 'hyper', 'miracle', 'romantic', 'sentence']
 
         Args:
@@ -38,4 +47,4 @@ class WhitespaceTokenizer(TokenizerBase):
             a list of tokens.
         """
         res = re.split(r'\s+', sentence)
-        return [WhitespaceToken(tok) for tok in res if tok]
+        return [cast(Token, WhitespaceToken(tok)) for tok in res if tok]
