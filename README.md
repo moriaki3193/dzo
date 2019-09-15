@@ -1,5 +1,5 @@
 # dzo
-**This package is not ready for production use!!!**
+Python (& partially Cython for optimization) implemented portable and easy-to-use search engine.
 
 ## Overview
 ![MIT](https://img.shields.io/pypi/l/dzo.svg)
@@ -51,7 +51,84 @@ $ dzo search おにぎり --index-path ./data/inverted-index.pkl --dicdir=/usr/l
 ```
 
 ### Python package
-**WIP**
+You can easily implement your own inverted index preprocessor and search engine. A brief example is below.
+
+#### Impl your own preprocessor
+Let's assume that we have a CSV file which contains a lots of (id, artist) like below.
+
+```csv
+id,artist
+1,Red Hot Chili Peppers
+2,Oasis
+3,Arctic Monkeys
+4,Rage Against The Machines
+5,Gorillaz
+...
+```
+
+You can implement your own ad-hoc preprocessor by inheriting **AbstractLoader**. All loaders inheriting this abstract class must have an implementation of `load()` instance method.
+
+```python
+from typing import List
+
+import MeCab
+import pandas as pd
+
+from dzo.annot import Document
+from dzo.base import AbstractLoader
+
+
+class AdHocPandasLoader(AbstractLoader):
+
+    def load(self) -> List[Document]:  # type hinting is optional.
+        df = pd.read_csv(PATH_TO_CSV, usecols=['id', 'artist'])
+
+        docs: List[Document] = []
+
+        for idx, row in df.iterrows():
+            doc = Document(idx, row['artist'])
+            docs.append(doc)
+
+        return docs
+```
+
+Since all classes inheriting **AbstractLoader** are valid as a protocol **annot.Loader**, so all you have to do from now on is choose **Tokenizer**, and then pass those `AdHocPandasLoader` and the tokenizer to **Preprocessor**.
+
+```python
+from dzo.tokenizer import WhitespaceTokenizer
+
+
+loader = AdHocPandasLoader()
+tokenizer = WhitespaceTokenizer()
+
+preprocessor = Preprocessor(loader, tokenizer)
+inv_index = preprocessor.preprocess()
+
+# You can save the inverted index so as to use it later.
+preprocessor.save(inv_index, '/path/to/inv-index.pkl')
+```
+
+Other useful tokeinzer classes are implemented. Please see [dzo.tokenizer](./dzo/tokenizer) subpackage.
+
+#### Impl your own search engine
+After you dump the inverted index as above, you can implement your own search engine using the index.
+
+```python
+from dzo.engine import Engine
+
+
+engine = Engine('/path/to/index.pkl')
+tokenizer = WhitespaceTokenizer()
+```
+
+Yes! That's all. Let's try the search engine like below.
+
+```python
+# Let's search!!!
+# >>> query = 'Chili'
+# >>> engine.search(query)
+# [1]  ← since ID for 'Red Hot Chili Peppers' is 1
+```
 
 ## Development
 ### Note
