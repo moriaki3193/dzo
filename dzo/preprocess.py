@@ -6,9 +6,9 @@ import pickle
 from os import path
 from typing import List, Optional, Set
 
+from .annot import Tokenizer
 from .indexer import Indexer, NamedIndex, InvIndex
 from .loader import DirectoryLoader
-from .tokenizer.base import TokenizerBase
 
 
 def _extr_ext(p: str) -> str:
@@ -18,6 +18,12 @@ def _extr_ext(p: str) -> str:
         >>> p = '/path/to/file.ext'
         >>> _extr_ext(p)
         >>> '.ext'
+
+    Args:
+        p: a file path.
+
+    Returns:
+        ext: an extension of the file.
     """
     fname = path.basename(p)
     _, ext = path.splitext(fname)
@@ -34,7 +40,7 @@ class Preprocessor:
     def __init__(
             self,
             loader: DirectoryLoader,
-            tokenizer: TokenizerBase
+            tokenizer: Tokenizer
         ) -> None:
         self._loader = loader
         self._tokenizer = tokenizer
@@ -64,7 +70,7 @@ class Preprocessor:
         named_indices: List[NamedIndex] = []
         for doc in docs:
             tokens = self._tokenizer.tokenize(doc.content)
-            normalized_tokens = [t.get_normalized() for t in tokens]
+            normalized_tokens = [t.normalized for t in tokens]
             index = Indexer.make_index(normalized_tokens)
             named_indices.append(NamedIndex(doc.name, index))
         full_index = Indexer.merge(named_indices)

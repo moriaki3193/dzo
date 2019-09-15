@@ -45,6 +45,9 @@ $ dzo search <query> --index-path <index_path>
 
 # e.g.
 $ dzo search おにぎり --index-path ./data/inverted-index.pkl
+
+# e.g.
+$ dzo search おにぎり --index-path ./data/inverted-index.pkl --dicdir=/usr/local/lib/mecab/dic/ipadic
 ```
 
 ### Python package

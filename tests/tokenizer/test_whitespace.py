@@ -2,7 +2,17 @@
 """Testing whitespace module.
 """
 from dzo.tokenizer import WhitespaceTokenizer
-from dzo.tokenizer.token import WhitespaceToken
+from dzo.tokenizer.whitespace import WhitespaceToken
+
+
+def test_WhitespaceToken() -> None:
+    """Test for WhitespaceToken.
+    """
+    token = WhitespaceToken('a')
+
+    assert hasattr(token, 'surface')
+
+    assert token.normalized == 'a'
 
 
 def test_WhitespaceTokenizer_tokenize() -> None:
@@ -10,7 +20,7 @@ def test_WhitespaceTokenizer_tokenize() -> None:
     """
     sentence = 'super ultra  hyper    miracle　romantic sentence'  # contains full-width space
     res = WhitespaceTokenizer().tokenize(sentence)
-    got = [tok.get_normalized() for tok in res]
+    got = [tok.normalized for tok in res]
     want = ['super', 'ultra', 'hyper', 'miracle', 'romantic', 'sentence']
     assert isinstance(res, list)
     assert isinstance(res[0], WhitespaceToken)

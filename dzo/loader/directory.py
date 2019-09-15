@@ -6,10 +6,11 @@ import logging
 import os.path
 from typing import List, Optional, Set
 
-from ..types import Document
+from ..annot import Document
+from ..base import AbstractLoader
 
 
-class DirectoryLoader:
+class DirectoryLoader(AbstractLoader):
     """DirectoryLoader is a utility class for loading documents from a local directory.
     """
 
